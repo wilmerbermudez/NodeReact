@@ -4,6 +4,8 @@ import Axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 
 const noti = withReactContent(Swal)
@@ -16,6 +18,7 @@ function Solicitudes() {
     const [resumen,setResumen] = useState("");
     const [id_empleado,setId_empleado] = useState("");
     const [empleado,setEmpleado] = useState("");
+    const [empleadoConsulta,setEmpleadoConsulta] = useState("");
 
     const [solicitudesList,setSolicitudes] = useState([])
 
@@ -84,6 +87,13 @@ function Solicitudes() {
         });
       }
 
+      const getEmpleado = ()=>{
+        Axios.get(`http://localhost:3001/api/empleadoNombre${empleado}`)
+        .then((response)=>{
+            setEmpleadoConsulta(response.data);
+        });
+      }
+
       useEffect(() => {
         getSolicitudes();
       }, []);
@@ -95,13 +105,16 @@ function Solicitudes() {
                 consulta de empleado
             </div>
             <div className="card-body">
-            <div className="input-group mb-3">
-                <span className="input-group-text" id="basic-addon1">Nombre Empleado:</span>
-                <input type="text" 
-                    onChange={(event) => {
-                    setEmpleado(event.target.value)
-                    }}
-                className="form-control" value={empleado} placeholder="Ingrese nombre del empleado" aria-label="Username" aria-describedby="basic-addon1"/>
+                <div className="input-group mb-3">
+                    <span className="input-group-text" id="basic-addon1">Nombre Empleado:</span>
+                    <input type="text" 
+                        onChange={(event) => {
+                        setEmpleado(event.target.value)
+                        }}
+                    className="form-control" value={empleadoConsulta} placeholder="Ingrese nombre del empleado" aria-label="Username" aria-describedby="basic-addon1"/>
+                    <button type="button" onClick={()=>{
+                            getEmpleado(empleadoConsulta)
+                          }} className="btn btn-info"><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
                 </div>
             </div>
         </div>
