@@ -1,8 +1,13 @@
-#pasos para ejecutar el proyecto.
+# Pasos para ejecutar el proyecto
 
-1. Usar npm install para traer todas las depencias que se usaron.
-2. Script de la base de datos:
-   -- CreateTable
+1. Instalar Node.js en la versión v20.5.0.
+2. Ejecutar `npm install` para instalar todas las dependencias utilizadas.
+3. Ejecutar script para la base de datos.
+
+## Script de la base de datos
+
+```sql
+-- CreateTable Empleado
 CREATE TABLE "Empleado" (
     "id" SERIAL NOT NULL,
     "fecha_ingreso" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -12,7 +17,7 @@ CREATE TABLE "Empleado" (
     CONSTRAINT "Empleado_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
+-- CreateTable Solicitud
 CREATE TABLE "Solicitud" (
     "id" SERIAL NOT NULL,
     "codigo" TEXT NOT NULL,
@@ -23,11 +28,11 @@ CREATE TABLE "Solicitud" (
     CONSTRAINT "Solicitud_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
+-- CreateIndex Empleado_nombre_key
 CREATE UNIQUE INDEX "Empleado_nombre_key" ON "Empleado"("nombre");
 
--- CreateIndex
+-- CreateIndex Solicitud_codigo_key
 CREATE UNIQUE INDEX "Solicitud_codigo_key" ON "Solicitud"("codigo");
 
--- AddForeignKey
+-- AddForeignKey Solicitud_id_empleado_fkey
 ALTER TABLE "Solicitud" ADD CONSTRAINT "Solicitud_id_empleado_fkey" FOREIGN KEY ("id_empleado") REFERENCES "Empleado"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
