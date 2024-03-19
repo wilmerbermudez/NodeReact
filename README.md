@@ -3,6 +3,8 @@
 1. Instalar Node.js en la versión v20.5.0.
 2. Ejecutar `npm install` para instalar todas las dependencias utilizadas.
 3. Ejecutar script para la base de datos.
+4. Usar comando npm run dev en raiz.
+5. Usar comando npm start dentro de la carpeta frontend
 
 ## Script de la base de datos
 
@@ -36,3 +38,4 @@ CREATE UNIQUE INDEX "Solicitud_codigo_key" ON "Solicitud"("codigo");
 
 -- AddForeignKey Solicitud_id_empleado_fkey
 ALTER TABLE "Solicitud" ADD CONSTRAINT "Solicitud_id_empleado_fkey" FOREIGN KEY ("id_empleado") REFERENCES "Empleado"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
