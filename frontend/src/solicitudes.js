@@ -22,12 +22,14 @@ function Solicitudes() {
 
     const [solicitudesList,setSolicitudes] = useState([])
 
+    const [empleadoList,setEmpleadoList] = useState([])
+
     const add = ()=>{
         Axios.post("http://localhost:3001/api/agregarSolicitud", {
           codigo:codigo,
           descripcion:descripcion,
           resumen:resumen,
-          id_empleado:1
+          id_empleado:id_empleado
         }).then(()=>{
           limpiarCampos();
           getSolicitudes();
@@ -78,6 +80,14 @@ function Solicitudes() {
         setDescripcion('');
         setResumen('');
         setId_empleado('');
+        limpiarEmpleado();
+      }
+
+      const limpiarEmpleado = ()=>{
+        setId_empleado('');
+        setEmpleadoConsulta('');
+        setEmpleadoList([]);
+        setEmpleado('');
       }
 
       const getSolicitudes = ()=>{
@@ -88,10 +98,29 @@ function Solicitudes() {
       }
 
       const getEmpleado = ()=>{
-        Axios.get(`http://localhost:3001/api/empleadoNombre${empleado}`)
-        .then((response)=>{
-            setEmpleadoConsulta(response.data);
-        });
+        let validar = empleado
+        console.log(validar);
+        if (validar === null || validar === ''){
+          noti.fire({
+            title: 'Error',
+            text: `El campo empledo no puede estar vacio`,
+            icon: 'info',
+            timer: 2000
+          })
+        } else {
+          Axios.get(`http://localhost:3001/api/empleadoNombre/${empleado}`)
+          .then((response)=>{
+              setEmpleadoConsulta(response.data);
+              setId_empleado(response.data.id);
+              setEmpleadoList(Array.isArray(response.data) ? response.data : [response.data]);
+          }).catch((error)=>{
+            noti.fire({
+              title: 'Oops...',
+              text: `El empleado ${empleado} no existe`,
+              icon: 'error'
+            })
+          });        
+        }
       }
 
       useEffect(() => {
@@ -102,22 +131,50 @@ function Solicitudes() {
     <div className="container">
         <div className="card text-center">
             <div className="card-header">
-                consulta de empleado
+                Consulta de Empleado
             </div>
             <div className="card-body">
                 <div className="input-group mb-3">
                     <span className="input-group-text" id="basic-addon1">Nombre Empleado:</span>
-                    <input type="text" 
+                    <input type="text" value={empleado}
                         onChange={(event) => {
                         setEmpleado(event.target.value)
                         }}
-                    className="form-control" value={empleadoConsulta} placeholder="Ingrese nombre del empleado" aria-label="Username" aria-describedby="basic-addon1"/>
+                    className="form-control" placeholder="Ingrese nombre del empleado" aria-label="Username" aria-describedby="basic-addon1"/>
                     <button type="button" onClick={()=>{
-                            getEmpleado(empleadoConsulta)
+                            getEmpleado(empleado)
                           }} className="btn btn-info"><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
                 </div>
             </div>
         </div>
+        <table className="table table-striped mt" >
+        <thead>
+          <tr>
+            <th scope='col'>#</th>
+            <th scope='col'>Nombre Empleado</th>
+            <th scope='col'>Fecha Creado</th> 
+            <th scope='col'>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+            {
+              empleadoList.map((val,key)=>{
+                return <tr key={val.id}>
+                        <td>{val.id}</td>
+                        <td>{val.nombre}</td>
+                        <td>{val.fecha_ingreso}</td>
+                        <td>
+                        <div className="btn-group" role="group" aria-label="Basic example">
+                          <button type="button" onClick={()=>{
+                           limpiarEmpleado();
+                          }} className="btn btn-danger">Limpiar</button>
+                        </div>
+                        </td>
+                      </tr>
+              })
+            }
+        </tbody>
+      </table>
       <div className="card text-center">
         <div className="card-header">
           GESTION DE SOLICITUDES
@@ -151,7 +208,7 @@ function Solicitudes() {
             className="form-control" value={resumen} placeholder="Ingrese un resumen de la solicitud" aria-label="Username" aria-describedby="basic-addon1"/>
           </div>       
         </div>
-            <button className='btn btn-success' onClick={add}>Registrar</button>
+        {id_empleado === null || id_empleado === '' ? <button className='btn btn-success' onClick={add} disabled>Registrar</button>: <button className='btn btn-success' onClick={add} >Registrar</button> }
       </div>
 
       <table className="table table-striped mt" >
