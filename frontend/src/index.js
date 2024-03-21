@@ -7,6 +7,7 @@ import {
     createBrowserRouter,
     RouterProvider,
   } from "react-router-dom";
+import Dashboard from './dashboard';
 
 
 
@@ -19,6 +20,10 @@ import {
         path: "/solicitudes",
         element:  <Solicitudes />,
     },
+    {
+      path: "/",
+      element:  <Dashboard />,
+  },
   ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

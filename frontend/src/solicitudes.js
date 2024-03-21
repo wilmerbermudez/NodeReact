@@ -18,7 +18,6 @@ function Solicitudes() {
     const [resumen,setResumen] = useState("");
     const [id_empleado,setId_empleado] = useState("");
     const [empleado,setEmpleado] = useState("");
-    const [empleadoConsulta,setEmpleadoConsulta] = useState("");
 
     const [solicitudesList,setSolicitudes] = useState([])
 
@@ -85,7 +84,6 @@ function Solicitudes() {
 
       const limpiarEmpleado = ()=>{
         setId_empleado('');
-        setEmpleadoConsulta('');
         setEmpleadoList([]);
         setEmpleado('');
       }
@@ -110,7 +108,6 @@ function Solicitudes() {
         } else {
           Axios.get(`http://localhost:3001/api/empleadoNombre/${empleado}`)
           .then((response)=>{
-              setEmpleadoConsulta(response.data);
               setId_empleado(response.data.id);
               setEmpleadoList(Array.isArray(response.data) ? response.data : [response.data]);
           }).catch((error)=>{
